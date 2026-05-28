@@ -1,0 +1,7 @@
+# Optional (only for extra validation / accuracy plots)
+# softposit
+# pysigmoid
+# pytest
+# hypothesis
+# matplotlib
+# numpy
