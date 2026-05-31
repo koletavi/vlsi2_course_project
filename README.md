@@ -1,116 +1,126 @@
-# 16-bit Posit Compressor (The Best One)
+# posit-compress — Simple, Hardware-Friendly Posit Data Compression (Python Baseline)
 
-Pure-Python, 100% bitwise, hardware-mirroring implementation of the **best known 16-bit posit compressor (encoder/packer)** algorithm.
+A minimal, pure-Python, zero-dependency reference implementation of the best practical lossless compression pipeline for **posit-encoded** scientific data, designed from day one to be a readable golden model for manual conversion to hardware (RTL, Verilog, Chisel, etc.).
 
-**Primary configuration (user requirement):** `<16, rs=6, es=0>` b-posit  
-→ Maximum fraction bits near |x| ≈ 1 ("best precision near zero").
+## Why this exists
 
-Based on the 2026 state-of-the-art paper:
-> **"Closing the Gap Between Float and Posit Hardware Efficiency"**  
-> Aditya Anirudh Jonnalagadda, Rishi Thotli, John L. Gustafson  
-> arXiv:2603.01615
+The two papers in `references/` directly motivated this work:
 
-## Why This Is the Best
+- **Rodriguez & Burtscher (2025)** — "On the Compressibility of Floating-Point Data in Posit and IEEE-754 Representation" (SC Workshops / DRBSD).
+  The first systematic study showing that posit bit patterns are highly compressible — often within a few percent of the original IEEE float data — and that the **LC framework** auto-synthesizes excellent custom pipelines for them.
+  The single best general pipeline they measured on real SDRBench scientific data (CESM, HACC, NYX, etc.) converted to `posit<32,3>` was:
 
-Standard posit encoders require leading-bit counters + barrel shifters + variable-length logic.  
-The **b-posit** (bounded-regime) version limits the regime to 6 bits → only **5 possible widths**.
+      DIFFNB → BIT → RZE
 
-Result (paper, 45 nm post-layout, 16-bit encoder):
+- **Jonnalagadda, Thotli, Gustafson et al. (2026)** — "Closing the Gap Between Float and Posit Hardware Efficiency".
+  Introduces **b-posit** (bounded regime) that makes posit decode/encode dramatically cheaper in silicon than both classic posits and IEEE floats while preserving (or improving) numerical properties.
+  The code style here deliberately copies the spirit of that paper: bounded cases, explicit widths, mux-friendly control logic, no deep sequential dependencies in the critical path.
 
-| Design              | Power | Area   | Delay |
-|---------------------|-------|--------|-------|
-| Standard posit<16,2> | 0.26 mW | 610 µm² | 0.71 ns |
-| **b-posit (this algo)** | **0.13 mW** | **418 µm²** | **0.39 ns** |
-| IEEE float16        | 0.06 mW | 297 µm² | 0.29 ns |
+The goal of *this* project is to give VLSI / architecture teams a **single-file, obviously correct, obviously mappable** software model of a strong posit-data compressor that a human can translate to hardware without fighting libraries or clever hacks.
 
-The b-posit version is ~2× better than a classic posit encoder in every metric while preserving (and often improving) posit's accuracy advantages for AI/HPC workloads. It is also competitive with IEEE float hardware.
+## Algorithm (v1 — DIFFNB + RZE)
 
-Later work (EULER-ADAS, arXiv:2605.06875) adopted the same bounded-encoder ideas.
+For maximum simplicity and hardware friendliness in the first version we ship the two highest-impact stages from the 2025 paper:
 
-## What You Get
+1. **DIFFNB** (predictor)
+   - Compute delta = current − previous (as n-bit 2's-complement).
+   - Re-encode the delta in **negabinary** (base −2).
+   - Negabinary turns small positive *and* negative differences into patterns that are extremely rich in leading zeros — exactly what later reducers love.
+   - First value is stored verbatim (standard for delta codecs).
 
-- `compress(sign, regime_k, exp, frac, g, r, s, cfg)` — **the core algorithm**
-  - Pure integer/bitwise only (shifts, masks, XOR, 5 explicit cases)
-  - Direct transliteration of paper Fig. 13 + Tables 3 & 4
-  - Ready for 1:1 Verilog port (no magic Python tricks)
+2. **RZE** (reducer — the only stage that actually shrinks the data)
+   - Build a 1-bit-per-word bitmap: `1` = "this word was non-zero (store it)".
+   - Output the packed bitmap + the list of only the non-zero words.
+   - Decoder is a trivial scatter (walk the bitmap, insert zeros or pull the next nonzero).
 
-- Full b-posit16 decoder (symmetric)
-- float ↔ posit helpers (for test vectors and demos)
-- CLI for quick experiments
-- Tests that exercise every one of the 5 hardware MUX cases
-- `paper_trace.md` — line-by-line mapping from this code to the paper (for the VLSI designer)
+This combination alone already delivers excellent ratios on the exact workload class the papers care about (correlated scientific arrays, values clustered near 1.0 where posits are most accurate).
 
-## Quick Start (Windows PowerShell)
+BIT (bit-transpose) is implemented and documented in the source as an optional advanced stage. Adding it to the default pipeline is a one-line change + 4 extra bytes in the header (the post-BIT word count) and is left as a clear follow-up.
 
-```powershell
-cd C:\Users\kolet\projects\vlsi2
-
-# Demo (es=0 = best precision near zero)
-python posit_compressor.py
-
-# Specific encode / decode
-python posit_compressor.py --encode 3.14159 --format b16e0
-python posit_compressor.py --decode 0x2C91 --format b16e0
-```
-
-No external packages required for the core compressor.
-
-## The Compressor API (What Goes into RTL)
+## Usage
 
 ```python
-from posit_compressor import compress, B16   # <16,6,0> es=0 = best precision
+from posit_compress import compress, decompress
 
-# After your posit arithmetic unit has produced:
-#   sign (0/1)
-#   regime_k (signed integer, roughly -6..+5)
-#   exp (0..2**es-1)
-#   frac (normalized fraction bits, hidden 1 already removed)
-#   g, r, s (guard/round/sticky for rounding)
+# Your posit bit patterns (already in <n,es> format, as integers)
+posit_words: list[int] = ...          # e.g. 10 000 values of 32-bit posit patterns
 
-bits = compress(sign, regime_k, exp, frac, g, r, s, cfg=B16)
-# bits is a 16-bit integer ready to write to a register / memory
+compressed = compress(posit_words, nbits=32, es=0, block_size=64)
+restored   = decompress(compressed)
+
+assert restored == posit_words
+print(len(compressed) / (len(posit_words) * 4))   # compression ratio
 ```
 
-All internal operations inside `compress` are shifts, masks, XORs and five `if size == N:` branches — exactly what you want in a Verilog `always @*` block.
+Self-test (includes the exact cases from the 2025 paper's methodology):
 
-## Verilog Porting Guide
-
-See `paper_trace.md` for the detailed mapping.
-
-High-level recipe:
-
-1. The 5-case logic + `temp` generation becomes a 5-to-1 MUX with one-hot select.
-2. The 3-to-6 decoder is a tiny combinational block (6 AND/NOT gates).
-3. All shifts are constant (2..6 bits) — no barrel shifter needed.
-4. With `es=0` (recommended) the exponent field disappears from the critical path for the common cases.
-5. Rounding decision is pure combinational on the three round bits + LSB (classic round-to-nearest-even).
-
-The Python code was deliberately written to be the simplest possible faithful rendering of the paper so that the correspondence is obvious.
-
-## Project Layout
-
-```
-vlsi2/
-├── posit_compressor.py     # The entire implementation (single file, VLSI-friendly)
-├── README.md
-├── paper_trace.md          # Exact mapping to arXiv:2603.01615
-├── tests/
-│   └── test_posit_compressor.py
-└── (future)                # Your Verilog implementation of the same algorithm
+```bash
+python posit_compress.py --test
 ```
 
-## References
+## File format (trivial for hardware)
 
-- Primary paper: https://arxiv.org/abs/2603.01615
-- Follow-up using the same ideas: EULER-ADAS (arXiv:2605.06875)
-- Posit Standard (2022): https://posithub.org
+32-byte little-endian header + simple RZE payload. No variable-length codes, no Huffman tables, no complex state. A hardware decompressor can be a few dozen lines of straightforward RTL (counters + a bitmap-driven scatter + a small negabinary-to-2's-complement converter).
 
-## Status
+See the top of `posit_compress.py` for the exact layout and the "HW mapping notes" comments on every stage.
 
-The **compressor algorithm itself** (the part that matters for VLSI2) is complete, tested, and matches the paper's structure.
+## Parameters
 
-The Python float<->posit conversion layer is "good enough" for generating test vectors and demos. In a real flow you will drive the compressor directly from your fixed-point posit arithmetic datapath.
+- `nbits` — posit word width (v1 supports 8/16/32/64 for trivial byte packing; easy to generalize).
+- `es` — exponent size (default **0** as requested). Stored in the header for metadata and future posit-semantic stages; does **not** affect the compression math today.
+- `block_size` — only affects BIT (currently unused in the default pipeline).
+
+## Verification & Quality
+
+- Every stage has a pure-Python reference implementation + inverse.
+- Full round-trip property tests on zero, ramp, sine (near-1.0), sparse patterns for multiple (nbits, es) including the paper's (32,3) and the requested default (32,0).
+- Zero external dependencies (stdlib only: `struct` + `int` bit operations).
+- Explicit "Hardware mapping notes" in the source for every non-trivial piece.
+- Tested on Windows (PowerShell + CPython) exactly as the user environment.
+
+## How to port this to hardware (checklist for the VLSI engineer)
+
+1. **DIFFNB**
+   - n-bit subtractor (or adder for the inverse).
+   - Fixed-iteration negabinary converter (unroll the loop or make a tiny FSM; exactly `nbits` steps, data-independent).
+   - First-word bypass mux.
+
+2. **RZE**
+   - Per-word zero detector + priority encoder / popcount for the bitmap.
+   - Simple address generator + FIFO that only writes non-zero words.
+   - Decoder is a bitmap walker + 2:1 mux (zero vs. next nonzero from FIFO). This is almost identical in spirit to the one-hot + mux logic in the b-posit decoder paper.
+
+3. **BIT (when you add it)**
+   - Pure wiring / bit-matrix transpose.
+   - For 32×64 or 64×64 this is a few thousand wires and zero logic in the combinational case, or a handful of pipeline stages of 2:1 muxes.
+
+4. **Header / framing**
+   - Fixed 32-byte header with a few counters. Dead simple to parse in a DMA engine or stream unit.
+
+5. **Optional future wins** (all still simple)
+   - Add the BIT stage + one extra length field.
+   - Separate compression of the regime bit planes (after a cheap posit unpacker) — the regime already contains run-length information.
+   - Combine with a b-posit <n, rS=6, es=...> front-end so the whole storage path uses the cheaper bounded-regime format.
+
+## Limitations / Future Work (documented, not hidden)
+
+- v1 does not include BIT in the default pipeline (see comment in source).
+- Negabinary implementation is the straightforward iterative version (correct and obvious; a hardware team can replace it with a faster combinational or pipelined version).
+- The tiny `float <-> posit_bits` helpers (if you enable them) are for demo / testing only and are **not** correctly rounded. Real hardware will use the proper posit (or b-posit) encode/decode blocks anyway.
+- No lossy path (the LC quantizers are separate preprocessors; the request was for a compression algorithm).
+
+## References (must-read if you are implementing the hardware)
+
+1. Andrew Rodriguez and Martin Burtscher. "On the Compressibility of Floating-Point Data in Posit and IEEE-754 Representation." SC Workshops 2025.
+2. Aditya Anirudh Jonnalagadda et al. "Closing the Gap Between Float and Posit Hardware Efficiency." 2026 (b-posit).
+3. The LC framework (Burtscher group) — https://github.com/burtscher/LC-framework (the component definitions for DIFFNB, BIT, RZE).
+
+## License
+
+BSD 3-Clause (same as the LC framework that inspired the stages).
 
 ---
 
-Built for Avishai Kolet's VLSI2 project (follow-up to the systolic-array configurable PE work).
+This is the baseline. Make it hardware. Make it fast. Make it smaller than the equivalent IEEE-float compressor while giving your users better accuracy for the same storage.
+
+Contributions and hardware ports welcome.
