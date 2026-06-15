@@ -3,8 +3,8 @@
 posit_decompress.py - Standalone decompressor for the posit data compression format.
 
 Based on the compressor implementation in ../compressor_sw/posit_compress.py
-Implements the inverse of DIFFNB -> RZE pipeline (BIT stage present for future
-but not used in v1 default path).
+Implements the inverse of the full DIFFNB -> BIT -> RZE pipeline
+(64-word packets / 32-bit words by default, matching the RTL).
 
 Produces JSON txt output files with the recovered posit word bit patterns.
 
@@ -57,34 +57,25 @@ def unpack_bytes_to_words(b: bytes, nbits: int, count: int) -> List[int]:
 # Stage 1 inverse: DIFFNB (negabinary delta decoder)
 # =============================================================================
 
-def _from_negabinary(bits: int, width: int) -> int:
-    """
-    Inverse of negabinary encoder.
-    Evaluates the base -2 polynomial to recover the 2's-complement value.
-    """
-    mask = (1 << width) - 1
-    bits &= mask
-    val = 0
-    power = 1  # (-2)^0
-    for i in range(width):
-        if (bits >> i) & 1:
-            val += power
-        power *= -2
-    return val & mask
-
+def _hw_nb_mask(width: int) -> int:
+    if width <= 0 or (width % 2 != 0):
+        raise ValueError("width must be positive and even for HW NB_MASK pattern")
+    return int('10' * (width // 2), 2)
 
 def diff_nb_decode(words: List[int], nbits: int) -> List[int]:
-    """Inverse of diff_nb_encode."""
+    """Inverse of diff_nb_encode, exactly matching the HW (delta + MASK)^MASK transform."""
     if not words:
         return []
     mask = (1 << nbits) - 1
-    out: List[int] = [words[0] & mask]
-    prev = words[0] & mask
+    NB_MASK = _hw_nb_mask(nbits)
+    out: List[int] = []
+    nb0 = words[0] & mask
+    delta = ((nb0 ^ NB_MASK) - NB_MASK) & mask
+    prev = delta
+    out.append(prev)
     for nb in words[1:]:
-        signed_diff = _from_negabinary(nb, nbits)
-        if signed_diff & (1 << (nbits - 1)):
-            signed_diff -= (1 << nbits)
-        curr = (prev + signed_diff) & mask
+        delta = ((nb ^ NB_MASK) - NB_MASK) & mask
+        curr = (prev + delta) & mask
         out.append(curr)
         prev = curr
     return out
@@ -106,11 +97,9 @@ def bit_transpose_decode(planes: List[int], nbits: int, block_size: int) -> List
         if planes_this_block == 0:
             break
 
-        first_plane = planes[plane_idx]
-        blk_len = first_plane.bit_length()
-        if blk_len == 0:
-            blk_len = 1
-        blk_len = min(blk_len, block_size)
+        # Encoder always emitted full block_size-wide planes (packet dimension padded to block_size).
+        # Always reconstruct block_size words per nbits-plane group; top level trims using orig_count.
+        blk_len = block_size
 
         block_out = [0] * blk_len
         for bp in range(nbits - 1, -1, -1):
@@ -177,9 +166,20 @@ def decompress(data: bytes) -> List[int]:
     bitmap = payload[8 : 8 + bitmap_nbytes]
     nz_bytes = payload[8 + bitmap_nbytes :]
 
-    # Reverse pipeline: RZE then DIFFNB (BIT not applied in v1)
-    stage1 = rze_decode(bitmap, nz_bytes, orig_count, nbits)
+    # Full 3-stage inverse (DIFFNB <- BIT <- RZE) to match the compressor.
+    nblocks = (orig_count + block_size - 1) // block_size if block_size > 0 else 1
+    plane_slots = nblocks * nbits
+    plane_item_width = block_size
+
+    # rze_decode 4th arg = item width for the stored nonzeros (now planes)
+    planes = rze_decode(bitmap, nz_bytes, plane_slots, plane_item_width)
+
+    # Recover post-DIFFNB words from the (reconstructed) planes
+    stage1 = bit_transpose_decode(planes, nbits, block_size)
+
     words = diff_nb_decode(stage1, nbits)
+    if len(words) > orig_count:
+        words = words[:orig_count]
     return words
 
 
@@ -216,40 +216,31 @@ def load_raw_compressed(filename: str) -> bytes:
 
 def self_test(verbose: bool = True) -> bool:
     """Minimal roundtrip sanity using synthetic data (no external files)."""
-    # We re-implement a tiny compress subset here only for the self-test of the decompressor
-    # to stay self-contained. This mirrors the active v1 pipeline in the compressor.
-    def _to_negabinary(val: int, width: int) -> int:
-        mask = (1 << width) - 1
-        result = 0
-        v = val
-        for i in range(width):
-            rem = v % -2
-            if rem < 0:
-                rem += 2
-            bit = 1 if rem == 1 else 0
-            result |= (bit << i)
-            v = (v - rem) // -2
-        return result & mask
+    # Local HW-matched helpers for self-contained roundtrip test of the decompressor.
+    def _hw_nb_mask(width: int) -> int:
+        if width <= 0 or (width % 2 != 0):
+            raise ValueError("width must be positive and even")
+        return int('10' * (width // 2), 2)
 
     def diff_nb_encode(words: List[int], nbits: int) -> List[int]:
         if not words:
             return []
         mask = (1 << nbits) - 1
-        out: List[int] = [words[0] & mask]
+        NB_MASK = _hw_nb_mask(nbits)
+        out: List[int] = []
         prev = words[0] & mask
+        delta = prev
+        nb = ((delta + NB_MASK) & mask) ^ NB_MASK
+        out.append(nb)
         for w in words[1:]:
             curr = w & mask
-            diff = (curr - prev) & mask
-            if diff & (1 << (nbits - 1)):
-                signed_diff = diff - (1 << nbits)
-            else:
-                signed_diff = diff
-            nb = _to_negabinary(signed_diff, nbits)
+            delta = (curr - prev) & mask
+            nb = ((delta + NB_MASK) & mask) ^ NB_MASK
             out.append(nb)
             prev = curr
         return out
 
-    def rze_encode(words: List[int], nbits: int):
+    def rze_encode(words: List[int], item_width: int):
         count = len(words)
         if count == 0:
             return b'', b'', 0
@@ -261,24 +252,45 @@ def self_test(verbose: bool = True) -> bool:
                 nonzeros.append(w)
         nbytes_bitmap = (count + 7) // 8
         bitmap_bytes = bitmap_int.to_bytes(nbytes_bitmap, 'little')
-        nbytes = nbits // 8
+        nbytes = (item_width + 7) // 8
         nz_bytes = b''.join(w.to_bytes(nbytes, 'little') for w in nonzeros)
         return bitmap_bytes, nz_bytes, count
 
-    def compress_local(posit_words: List[int], nbits: int = 32) -> bytes:
+    def bit_transpose_encode(words: List[int], nbits: int, block_size: int) -> List[int]:
+        if not words:
+            return []
+        mask = (1 << nbits) - 1
+        out: List[int] = []
+        for start in range(0, len(words), block_size):
+            raw_block = [w & mask for w in words[start : start + block_size]]
+            blk_len = len(raw_block)
+            block = raw_block + [0] * (block_size - blk_len) if blk_len < block_size else raw_block
+            full_len = block_size
+            for bitpos in range(nbits - 1, -1, -1):
+                plane = 0
+                for i in range(full_len):
+                    if (block[i] >> bitpos) & 1:
+                        plane |= (1 << i)
+                out.append(plane & ((1 << full_len) - 1))
+        return out
+
+    def compress_local(posit_words: List[int], nbits: int = 32, block_size: int = 64) -> bytes:
         if nbits not in SUPPORTED_NBITS:
             raise ValueError(f"nbits must be one of {SUPPORTED_NBITS}")
         orig_count = len(posit_words)
         if orig_count == 0:
             return struct.pack('<4sBBBBH6sQ8s', MAGIC, VERSION, nbits, 0, 0,
-                               64, b'\0'*6, 0, b'\0'*8)
+                               block_size, b'\0'*6, 0, b'\0'*8)
+        # Local full 3-stage (DIFFNB->BIT->RZE on planes) for self-test
         stage1 = diff_nb_encode(posit_words, nbits)
-        bitmap_b, nz_b, _ = rze_encode(stage1, nbits)
+        stage2 = bit_transpose_encode(stage1, nbits, block_size)
+        plane_item_width = block_size
+        bitmap_b, nz_b, _ = rze_encode(stage2, plane_item_width)
         header = struct.pack('<4sBBBBH6sQ8s',
                              MAGIC, VERSION, nbits, 0, 0,
-                             64, b'\0'*6, orig_count, b'\0'*8)
-        payload = struct.pack('<II', len(nz_b) // (nbits // 8) if nz_b else 0,
-                              len(bitmap_b)) + bitmap_b + nz_b
+                             block_size, b'\0'*6, orig_count, b'\0'*8)
+        num_nz = (len(nz_b) // (plane_item_width // 8)) if nz_b else 0
+        payload = struct.pack('<II', num_nz, len(bitmap_b)) + bitmap_b + nz_b
         return header + payload
 
     ok = True

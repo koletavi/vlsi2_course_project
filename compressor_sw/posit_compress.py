@@ -24,6 +24,14 @@ Primary API:
     compress(posit_words: list[int], nbits=32, es=0, block_size=64) -> bytes
     decompress(data: bytes) -> list[int]
 
+The compressor implements the complete 3-stage pipeline used by the hardware:
+    DIFFNB (delta + cheap NB_MASK transform) -> BIT (per-packet bit transpose)
+    -> RZE (zero-plane elimination on the transposed bit-planes, with group packing).
+
+Designed for 32-bit words and 64-word packets (WORD_SIZE=32, PACKET_SIZE=64)
+while remaining configurable. All stages are pure integer/bitwise and map
+directly to the RTL blocks in compressor_hw/rtl/.
+
 All internal stages operate on the raw posit bit patterns (re-interpreted as
 unsigned integers of 'nbits' width). This is exactly what the 2025 paper did
 with LC and is the most hardware-friendly approach (no need to decode regime/
@@ -52,17 +60,21 @@ from typing import List, Tuple, Optional
 # 24      8      (reserved for future: e.g. b-posit rS or flags)
 # 32      ...    Payload = RZE output of BIT(DIFFNB(input_words))
 #
-# RZE payload (after header):
-#   uint32  num_nonzero
+# RZE payload (after header) when using the full DIFFNB->BIT->RZE pipeline:
+#   uint32  num_nonzero_planes
 #   uint32  bitmap_nbytes
-#   bitmap_nbytes bytes   (packed bitmap, bit i = 1 if word i was NONZERO)
-#   then exactly num_nonzero * (nbits//8) bytes for the nonzero words
-#     (each word stored LSB-first in its (nbits//8) bytes)
+#   bitmap_nbytes bytes   (packed bitmap over the *plane slots* = nblocks*nbits ;
+#                          bit i = 1 if the i-th bit-plane (across all packets) was NONZERO)
+#   then exactly num_nonzero_planes * (block_size//8) bytes for the nonzero planes.
+#     Each plane is a (block_size)-bit vector (e.g. 8 bytes for 64-word packets) stored LSB-first.
+#
+# The outer header still carries orig_word_count and block_size so the decompressor
+# can compute the expected number of plane slots (nblocks * nbits) and trim the
+# final partial packet back to the original word count.
 #
 # This layout is deliberately regular and has no variable-length codes inside
-# the hot data path. A hardware decompressor can stream it with simple counters
-# and a bitmap -> address generator (very similar to the one-hot logic in the
-# b-posit paper's decoder).
+# the hot data path. It directly models the data produced by the RTL pipeline
+# (diffnb -> bit_transpose -> rze with its key + packed nonzero planes + count).
 # =============================================================================
 
 MAGIC = b'PZ01'
@@ -119,84 +131,52 @@ def unpack_bytes_to_words(b: bytes, nbits: int, count: int) -> List[int]:
 #
 # This matches the exact component used in the 2025 paper's best posit pipeline.
 
-def _to_negabinary(val: int, width: int) -> int:
-    """
-    Convert a width-bit 2's-complement integer to its negabinary (base -2)
-    representation, returned as a width-bit unsigned pattern.
-    The algorithm is the classic "positive remainder" method for base -2.
-    """
-    if width <= 0:
-        raise ValueError("width must be positive")
-    mask = (1 << width) - 1
-    # Treat input as signed in 2's complement range
-    if val < 0:
-        val = (val & mask)  # already two's complement pattern, but we work with value
-    # Work with the numeric value; we will emit bits
-    result = 0
-    v = val
-    for i in range(width):
-        # remainder when dividing by -2 must be 0 or 1
-        rem = v % -2
-        if rem < 0:
-            rem += 2  # make remainder non-negative
-        bit = 1 if rem == 1 else 0
-        result |= (bit << i)
-        # v = (v - rem) / -2
-        v = (v - rem) // -2
-    return result & mask
-
-def _from_negabinary(bits: int, width: int) -> int:
-    """
-    Inverse of _to_negabinary for the same width.
-    Because we use a consistent positive-remainder convention, the inverse
-    is the same iterative procedure (negabinary decode is symmetric here).
-    """
-    # For this particular encoding the forward and reverse bit extraction
-    # produce the correct original 2's-complement value when re-interpreted.
-    # We reconstruct the integer value by evaluating the base -2 polynomial.
-    mask = (1 << width) - 1
-    bits &= mask
-    val = 0
-    power = 1  # (-2)^0
-    for i in range(width):
-        if (bits >> i) & 1:
-            val += power
-        power *= -2
-    # Return the value re-expressed as a 2's-complement pattern in 'width' bits
-    return val & mask
+def _hw_nb_mask(width: int) -> int:
+    """NB_MASK used by the hardware diffnb.sv: {width/2 {2'b10}} e.g. 0xAAAAAAAA for 32b."""
+    if width <= 0 or (width % 2 != 0):
+        raise ValueError("width must be positive and even for HW NB_MASK pattern")
+    return int('10' * (width // 2), 2)
 
 def diff_nb_encode(words: List[int], nbits: int) -> List[int]:
-    """DIFFNB forward: first word raw, subsequent = negabinary(current - prev)."""
+    """DIFFNB forward, *exactly* matching compressor_hw/rtl/diffnb.sv .
+
+    delta[0] = in[0]
+    delta[i] = in[i] - in[i-1]   (bit pattern subtract)
+    nb[i]   = (delta[i] + NB_MASK) ^ NB_MASK   for every i (including 0)
+    """
     if not words:
         return []
     mask = (1 << nbits) - 1
-    out: List[int] = [words[0] & mask]
+    NB_MASK = _hw_nb_mask(nbits)
+    out: List[int] = []
     prev = words[0] & mask
+    # Position 0: delta = raw word (as in HW)
+    delta = prev
+    nb = ((delta + NB_MASK) & mask) ^ NB_MASK
+    out.append(nb)
     for w in words[1:]:
         curr = w & mask
-        diff = (curr - prev) & mask          # 2's complement diff
-        # Interpret the bit pattern as signed value for negabinary conversion
-        if diff & (1 << (nbits - 1)):
-            signed_diff = diff - (1 << nbits)
-        else:
-            signed_diff = diff
-        nb = _to_negabinary(signed_diff, nbits)
+        delta = (curr - prev) & mask
+        nb = ((delta + NB_MASK) & mask) ^ NB_MASK
         out.append(nb)
         prev = curr
     return out
 
 def diff_nb_decode(words: List[int], nbits: int) -> List[int]:
-    """Inverse of diff_nb_encode."""
+    """Inverse of the HW-matched diff_nb_encode."""
     if not words:
         return []
     mask = (1 << nbits) - 1
-    out: List[int] = [words[0] & mask]
-    prev = words[0] & mask
+    NB_MASK = _hw_nb_mask(nbits)
+    out: List[int] = []
+    # Recover delta0
+    nb0 = words[0] & mask
+    delta = ((nb0 ^ NB_MASK) - NB_MASK) & mask
+    prev = delta
+    out.append(prev)
     for nb in words[1:]:
-        signed_diff = _from_negabinary(nb, nbits)
-        if signed_diff & (1 << (nbits - 1)):
-            signed_diff -= (1 << nbits)
-        curr = (prev + signed_diff) & mask
+        delta = ((nb ^ NB_MASK) - NB_MASK) & mask
+        curr = (prev + delta) & mask
         out.append(curr)
         prev = curr
     return out
@@ -224,14 +204,18 @@ def bit_transpose_encode(words: List[int], nbits: int, block_size: int) -> List[
     mask = (1 << nbits) - 1
     out: List[int] = []
     for start in range(0, len(words), block_size):
-        block = [w & mask for w in words[start : start + block_size]]
-        blk_len = len(block)
-        for bitpos in range(nbits - 1, -1, -1):  # MSB first (matches LC paper)
+        raw_block = [w & mask for w in words[start : start + block_size]]
+        blk_len = len(raw_block)
+        # Always process a full block_size "packet" (pad trailing positions with 0).
+        # This matches the fixed PACKET_SIZE arrays in hardware.
+        block = raw_block + [0] * (block_size - blk_len) if blk_len < block_size else raw_block
+        full_len = block_size
+        for bitpos in range(nbits - 1, -1, -1):  # MSB first
             plane = 0
-            for i, w in enumerate(block):
-                if (w >> bitpos) & 1:
+            for i in range(full_len):
+                if (block[i] >> bitpos) & 1:
                     plane |= (1 << i)
-            out.append(plane & ((1 << blk_len) - 1))
+            out.append(plane & ((1 << full_len) - 1))
     return out
 
 def bit_transpose_decode(planes: List[int], nbits: int, block_size: int) -> List[int]:
@@ -245,23 +229,16 @@ def bit_transpose_decode(planes: List[int], nbits: int, block_size: int) -> List
     out: List[int] = []
     plane_idx = 0
     while plane_idx < len(planes):
-        # Reconstruct one block: we have (up to) nbits consecutive plane values
-        # The number of original words in this block = number of bits used in the planes
-        # We infer blk_len from the highest bit set across the next nbits planes (or block_size)
         remaining_planes = len(planes) - plane_idx
         planes_this_block = min(nbits, remaining_planes)
         if planes_this_block == 0:
             break
 
-        # Determine blk_len by looking at bit width of the first plane of the block
-        first_plane = planes[plane_idx]
-        blk_len = first_plane.bit_length()
-        if blk_len == 0:
-            blk_len = 1  # all-zero block of size 1 is possible but rare
-        # Clamp to reasonable (we may have padded conceptually)
-        blk_len = min(blk_len, block_size)
+        # Encoder always emitted using the full block_size packet dimension (with 0 pads).
+        # We therefore always reconstruct exactly block_size words per group of nbits planes.
+        # The caller (top-level decompress) trims the final list using the stored orig_count.
+        blk_len = block_size
 
-        # Rebuild the original words for this block
         block_out = [0] * blk_len
         for bp in range(nbits - 1, -1, -1):
             if plane_idx >= len(planes):
@@ -353,20 +330,29 @@ def compress(posit_words: List[int], nbits: int = 32, es: int = 0,
         return struct.pack('<4sBBBBH6sQ8s', MAGIC, VERSION, nbits, es, 0,
                            block_size, b'\0'*6, 0, b'\0'*8)
 
-    # Stage pipeline (core of the best general pipeline from the 2025 paper).
-    # BIT is powerful but changes stream length, requiring extra length tracking.
-    # For v1 baseline we use the two most impactful stages (DIFFNB + RZE) for
-    # maximum simplicity while still beating or matching gzip on correlated data.
-    # A future revision can add BIT + an extra "post_bit_count" field (4 bytes).
+    # Full 3-stage pipeline as implemented in hardware (compressor_hw/rtl/compressor.sv):
+    #   DIFFNB (hw NB) -> BIT (bit_transpose per 64-word packet) -> RZE (plane packing)
+    # We process the input in block_size (64-word) packets so that BIT + RZE
+    # operate exactly as the RTL (32-bit words + 64-word packets by default).
     stage1 = diff_nb_encode(posit_words, nbits)
-    bitmap_b, nz_b, _ = rze_encode(stage1, nbits)
+    stage2 = bit_transpose_encode(stage1, nbits, block_size)
 
-    # Assemble header + payload
+    # RZE is now applied to the *planes* produced by BIT.
+    # - There are (approximately) nbits planes per block.
+    # - Each plane value is conceptually 'block_size' bits wide.
+    #   We pass block_size as the item storage width to rze so that nonzero planes
+    #   are packed as (block_size//8) bytes each (8 bytes for 64-word packets).
+    plane_item_width = block_size
+    bitmap_b, nz_b, _ = rze_encode(stage2, plane_item_width)
+
+    # Assemble header + payload.
+    # The inner (num_nz, bitmap_nbytes) now refers to nonzero *planes* (not original words).
+    # The bitmap covers the plane slots (num_blocks * nbits bits total).
     header = struct.pack('<4sBBBBH6sQ8s',
                          MAGIC, VERSION, nbits, es, 0,
                          block_size, b'\0'*6, orig_count, b'\0'*8)
-    payload = struct.pack('<II', len(nz_b) // (nbits // 8) if nz_b else 0,
-                          len(bitmap_b)) + bitmap_b + nz_b
+    num_nz_planes = (len(nz_b) // (plane_item_width // 8)) if nz_b else 0
+    payload = struct.pack('<II', num_nz_planes, len(bitmap_b)) + bitmap_b + nz_b
     return header + payload
 
 def decompress(data: bytes) -> List[int]:
@@ -391,10 +377,26 @@ def decompress(data: bytes) -> List[int]:
     bitmap = payload[8 : 8 + bitmap_nbytes]
     nz_bytes = payload[8 + bitmap_nbytes :]
 
-    # Reconstruct in reverse pipeline order (DIFFNB <- RZE)
-    # RZE was applied directly to DIFFNB output, so total words fed to RZE == orig_count
-    stage1 = rze_decode(bitmap, nz_bytes, orig_count, nbits)
+    # Reconstruct full DIFFNB <- BIT <- RZE pipeline (all 3 steps).
+    # After BIT we have (num_blocks * nbits) "plane slots".
+    # RZE (in this mode) was applied to those planes; each plane is stored
+    # using (block_size // 8) bytes.
+    nblocks = (orig_count + block_size - 1) // block_size if block_size > 0 else 1
+    plane_slots = nblocks * nbits
+    plane_item_width = block_size
+
+    # rze_decode's 4th arg is used as the item width for unpacking the nonzero planes.
+    # We pass block_size so the nz planes (64-bit for 64-word packets) are unpacked correctly.
+    planes = rze_decode(bitmap, nz_bytes, plane_slots, plane_item_width)
+
+    # Invert bit transpose (per block) to recover the post-DIFFNB words
+    stage1 = bit_transpose_decode(planes, nbits, block_size)
+
+    # Final DIFFNB inverse
     words = diff_nb_decode(stage1, nbits)
+    # The bit-transpose decoder may return a padded length for the last block; trim.
+    if len(words) > orig_count:
+        words = words[:orig_count]
     return words
 
 
