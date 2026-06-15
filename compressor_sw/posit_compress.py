@@ -33,6 +33,7 @@ exponent/fraction inside the compressor).
 from __future__ import annotations
 import struct
 import sys
+import json
 from typing import List, Tuple, Optional
 
 # =============================================================================
@@ -398,6 +399,56 @@ def decompress(data: bytes) -> List[int]:
 
 
 # =============================================================================
+# File I/O utilities for saving/loading results
+# =============================================================================
+
+def save_words_to_txt(words: List[int], filename: str) -> None:
+    """Save a list of words as JSON to a text file."""
+    with open(filename, 'w') as f:
+        json.dump({"words": words, "count": len(words)}, f, indent=2)
+    print(f"Saved {len(words)} words to {filename}")
+
+def load_words_from_txt(filename: str) -> List[int]:
+    """Load a list of words from a JSON text file."""
+    with open(filename, 'r') as f:
+        data = json.load(f)
+    words = data.get("words", [])
+    print(f"Loaded {len(words)} words from {filename}")
+    return words
+
+def save_compression_result(original_words: List[int], compressed_bytes: bytes, 
+                            filename: str, nbits: int, es: int) -> None:
+    """Save compression result with metadata to a text file."""
+    result = {
+        "compression_result": {
+            "original_count": len(original_words),
+            "original_bytes": len(original_words) * (nbits // 8),
+            "compressed_bytes": len(compressed_bytes),
+            "compression_ratio": len(compressed_bytes) / max(1, len(original_words) * (nbits // 8)),
+            "nbits": nbits,
+            "es": es,
+            "original_words": original_words,
+            "compressed_hex": compressed_bytes.hex()
+        }
+    }
+    with open(filename, 'w') as f:
+        json.dump(result, f, indent=2)
+    print(f"Saved compression result to {filename}")
+    print(f"  Original: {result['compression_result']['original_bytes']} bytes")
+    print(f"  Compressed: {result['compression_result']['compressed_bytes']} bytes")
+    print(f"  Ratio: {result['compression_result']['compression_ratio']:.3f}")
+
+def load_compression_result(filename: str) -> Tuple[List[int], bytes, int, int]:
+    """Load compression result from text file. Returns (words, compressed_bytes, nbits, es)."""
+    with open(filename, 'r') as f:
+        data = json.load(f)
+    result = data["compression_result"]
+    words = result["original_words"]
+    compressed = bytes.fromhex(result["compressed_hex"])
+    return words, compressed, result["nbits"], result["es"]
+
+
+# =============================================================================
 # Self-test and CLI
 # =============================================================================
 
@@ -469,10 +520,71 @@ def main(argv: Optional[List[str]] = None) -> int:
     if "--help" in argv or "-h" in argv or not argv:
         print(__doc__)
         print("Commands:\n"
-              "  python posit_compress.py --test     Run built-in verification\n"
-              "  python posit_compress.py            Show this help")
+              "  python posit_compress.py --test                                        Run built-in verification\n"
+              "  python posit_compress.py --compress <input.txt> <output.txt>          Compress and save result\n"
+              "                            [--nbits 32] [--es 0]\n"
+              "  python posit_compress.py --decompress <input.txt> <output.txt>        Decompress and save result\n"
+              "  python posit_compress.py                                              Show this help\n"
+              "\nFile format: JSON with word arrays and metadata")
         return 0
-    print("Unknown arguments. Use --test or --help.")
+    
+    # Handle --compress command
+    if "--compress" in argv:
+        try:
+            idx = argv.index("--compress")
+            if idx + 2 >= len(argv):
+                print("Error: --compress requires <input_file> <output_file>")
+                return 1
+            input_file = argv[idx + 1]
+            output_file = argv[idx + 2]
+            nbits = 32  # default
+            es = 0      # default
+            # Check for optional --nbits and --es arguments
+            if "--nbits" in argv:
+                nbits_idx = argv.index("--nbits")
+                if nbits_idx + 1 < len(argv):
+                    nbits = int(argv[nbits_idx + 1])
+            if "--es" in argv:
+                es_idx = argv.index("--es")
+                if es_idx + 1 < len(argv):
+                    es = int(argv[es_idx + 1])
+            words = load_words_from_txt(input_file)
+            compressed = compress(words, nbits=nbits, es=es)
+            save_compression_result(words, compressed, output_file, nbits, es)
+            return 0
+        except FileNotFoundError as e:
+            print(f"Error: {e}")
+            return 1
+        except Exception as e:
+            print(f"Error during compression: {e}")
+            return 1
+    
+    # Handle --decompress command
+    if "--decompress" in argv:
+        try:
+            idx = argv.index("--decompress")
+            if idx + 2 >= len(argv):
+                print("Error: --decompress requires <input_file> <output_file>")
+                return 1
+            input_file = argv[idx + 1]
+            output_file = argv[idx + 2]
+            words, compressed, nbits, es = load_compression_result(input_file)
+            decompressed = decompress(compressed)
+            save_words_to_txt(decompressed, output_file)
+            if decompressed == words:
+                print("✓ Roundtrip verification PASSED")
+            else:
+                print("✗ Roundtrip verification FAILED")
+                return 1
+            return 0
+        except FileNotFoundError as e:
+            print(f"Error: {e}")
+            return 1
+        except Exception as e:
+            print(f"Error during decompression: {e}")
+            return 1
+    
+    print("Unknown arguments. Use --test, --compress, --decompress, or --help.")
     return 1
 
 if __name__ == "__main__":
