@@ -25,7 +25,7 @@ module pack_group #( parameter PACKET_SIZE = 64, parameter GROUP_SIZE = 8 ) (
 // Walk the group. For every plane whose key bit is set, copy it to the next
 // free slot in the output. This produces a dense (zero-free) group.
 always_comb begin
-    logic [$clog2(GROUP_SIZE+1)-1:0] ptr = 0;
+    automatic logic [$clog2(GROUP_SIZE+1)-1:0] ptr = 0;
     out = '{default: '0};
     for (int i = 0; i < GROUP_SIZE; i++) begin
         if (key[i]) begin

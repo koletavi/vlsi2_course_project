@@ -1,0 +1,18 @@
+---
+pid: 12392
+cwd: "C:\Users\kolet\projects\vlsi2\compressor_hw\tb"
+command: "$root = \"C:\\Xilinx\\Vivado\\2024.1\"; $sim = \"C:\\Users\\kolet\\projects\\vlsi2\\compressor_hw\\tb\\sim_out\"; $tcl = \"C:\\Users\\kolet\\projects\\vlsi2\\compressor_hw\\tb\\scripts\\open_wave_view.tcl\"; cmd /c \"call `\"$root\\settings64.bat`\" && cd /d `\"$sim`\" && `\"$root\\bin\\xsim.bat`\" compressor_sim -gui -tclbatch `\"$tcl`\"\" 2>&1 | Select-Object -First 20"
+started_at: 2026-06-19T11:20:43.511Z
+running_for_ms: 17514998 
+---
+
+****** xsim v2024.1.2 (64-bit)
+  **** SW Build 5164865 on Thu Sep  5 14:37:11 MDT 2024
+  **** IP Build 5164407 on Fri Sep  6 08:18:11 MDT 2024
+  **** SharedData Build 5164864 on Thu Sep 05 13:09:09 MDT 2024
+  **** Start of session at: Fri Jun 19 14:20:44 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+
+start_gui
+INFO: [Common 17-206] Exiting xsim at Fri Jun 19 14:25:22 2026...

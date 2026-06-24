@@ -44,8 +44,8 @@ logic bit_valid;
 
 // delta negabinary encoding
 diffnb #(.WORD_SIZE(WORD_SIZE), .PACKET_SIZE(PACKET_SIZE)) dn_i (
-    clk(clk),
-    nrst(nrst),
+    .clk(clk),
+    .nrst(nrst),
     .data_packet(data_packet),
     .start(start),
     .valid(dn_valid),
@@ -54,8 +54,8 @@ diffnb #(.WORD_SIZE(WORD_SIZE), .PACKET_SIZE(PACKET_SIZE)) dn_i (
 
 // bit shuffle/transpose
 bit_transpose #(.WORD_SIZE(WORD_SIZE), .PACKET_SIZE(PACKET_SIZE)) bit_i (
-    clk(clk),
-    nrst(nrst),
+    .clk(clk),
+    .nrst(nrst),
     .encoded_packet(encoded_packet),
     .start(dn_valid),
     .valid(bit_valid),
@@ -64,8 +64,8 @@ bit_transpose #(.WORD_SIZE(WORD_SIZE), .PACKET_SIZE(PACKET_SIZE)) bit_i (
 
 // repeated zero elimination
 rze #(.WORD_SIZE(WORD_SIZE), .PACKET_SIZE(PACKET_SIZE), .GROUP_SIZE(GROUP_SIZE)) rze_i (
-    clk(clk),
-    nrst(nrst),
+    .clk(clk),
+    .nrst(nrst),
     .transposed_planes(transposed_planes),
     .start(bit_valid),
     .valid(valid),

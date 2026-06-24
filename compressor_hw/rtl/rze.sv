@@ -58,6 +58,7 @@ logic [PACKET_SIZE-1:0] packed_group [GROUPS-1:0][GROUP_SIZE-1:0];
 logic [$clog2(GROUP_SIZE+1)-1:0] group_count [GROUPS-1:0];
 logic [PACKET_SIZE-1:0] dense_data [WORD_SIZE-1:0];
 
+logic [PACKET_PTR_WIDTH-1:0] ptr_w;
 //------------------------------------------------------------------------------
 // Pack the non-zero planes in parallel using GROUP_SIZE-wide packers.
 // Each pack_group takes a slice of  GROUP_SIZE  planes + the corresponding
@@ -104,6 +105,7 @@ always_comb begin
             end
         end
     end
+    ptr_w = ptr;
 end
 
 
@@ -136,7 +138,7 @@ always_ff @(posedge clk or negedge nrst) begin
     if (!nrst) begin
         out_count <= '0;
     end else if (start) begin
-        out_count <= ptr;
+        out_count <= ptr_w;
     end
 end
 

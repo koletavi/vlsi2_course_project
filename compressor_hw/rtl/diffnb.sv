@@ -55,7 +55,7 @@ end
 // Register the encoded (delta-negabinary) packet. This is the output of Stage 1.
 always_ff @(posedge clk or negedge nrst) begin
     if (!nrst) begin
-        encoded_packet <= '0;
+        encoded_packet <= '{default: '0};
         valid <= 0;
     end else if (start) begin
         for (int i = 0; i < PACKET_SIZE; i++) begin

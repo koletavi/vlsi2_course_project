@@ -1,0 +1,11 @@
+# Simulation logs
+log/*
+!log/.gitkeep
+
+# Build artifacts (xsim snapshot, compile databases)
+sim_out/*
+!sim_out/.gitkeep
+
+# Waveform dumps
+wave/*
+!wave/.gitkeep
