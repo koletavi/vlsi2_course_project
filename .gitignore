@@ -2,3 +2,38 @@
 mcps/
 agent-tools/
 terminals/
+
+# Simulation logs (compressor_hw/tb, decompressor_hw/tb)
+**/log/*
+!**/log/.gitkeep
+**/log/*.backup.*
+
+# Build artifacts — xsim snapshot, compile databases
+**/sim_out/*
+!**/sim_out/.gitkeep
+
+# Waveform dumps
+**/wave/*
+!**/wave/.gitkeep
+
+# HW vs SW generated dumps and comparison
+**/hw_vs_sw/hw/*.txt
+**/hw_vs_sw/sw/*.txt
+**/hw_vs_sw/summary/*.txt
+**/hw_vs_sw/__pycache__/
+
+# Timing benchmark build artifacts and Vivado logs
+**/timing_compare/build/*
+!**/timing_compare/build/.gitkeep
+**/timing_compare/log/*
+!**/timing_compare/log/.gitkeep
+**/timing_compare/log/.vivado.lock
+**/timing_compare/log/_vivado_invoke.cmd
+**/timing_compare/log/*.backup.*
+**/timing_compare/synth_vs_sw/reports/*
+!**/timing_compare/synth_vs_sw/reports/.gitkeep
+**/timing_compare/impl_vs_sw/reports/*
+!**/timing_compare/impl_vs_sw/reports/.gitkeep
+**/timing_compare/sw/*.txt
+**/timing_compare/synth_vs_sw/*.txt
+**/timing_compare/impl_vs_sw/*.txt
