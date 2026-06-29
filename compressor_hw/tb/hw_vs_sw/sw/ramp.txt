@@ -3,7 +3,7 @@ COMPRESSION RESULT
 ================================================================================
 Source:      SOFTWARE (compressor_sw/posit_compress.py)
 Test:        ramp
-Generated:   2026-06-24 16:15:17 UTC
+Generated:   2026-06-28 00:41:07 UTC
 
 CONFIGURATION
   WORD_SIZE:   32

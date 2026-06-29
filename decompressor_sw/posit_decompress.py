@@ -341,14 +341,6 @@ def main(argv: Optional[List[str]] = None) -> int:
               "  python posit_decompress.py   # bare invocation runs demo using ../compressor_sw/test_output.txt\n")
         return 0
 
-    # No explicit command flags: run the demo that generates txt files in this directory.
-    if not any(a.startswith("--") for a in argv):
-        pass  # fall through to demo below
-    else:
-        # Unknown flag combination
-        print("Unknown arguments. Use --test, --decompress, --help, or run with no arguments for demo.")
-        return 1
-
     # Explicit decompress of a compression_result JSON (produced by compressor)
     if "--decompress" in argv:
         try:
@@ -360,8 +352,9 @@ def main(argv: Optional[List[str]] = None) -> int:
             output_file = argv[idx + 2]
             orig_words, compressed, nbits, es = load_compression_result(input_file)
             decompressed = decompress(compressed)
-            # Always write output relative to this script's directory
-            out_path = output_file if os.path.isabs(output_file) else os.path.join(script_dir, output_file)
+            # Force output filename (basename only) into this script's directory.
+            out_name = os.path.basename(output_file)
+            out_path = os.path.join(script_dir, out_name)
             save_words_to_txt(decompressed, out_path)
             if decompressed == orig_words:
                 print("✓ Roundtrip verification PASSED")
@@ -373,8 +366,13 @@ def main(argv: Optional[List[str]] = None) -> int:
             print(f"Error during decompression: {e}")
             return 1
 
-    # Default behavior: generate output txt files in the same (decompressor_sw) directory
-    # by decompressing the known test data produced by the compressor.
+    # Unknown flag(s) that start with -- but we didn't handle above
+    unknown = [a for a in argv if a.startswith("--")]
+    if unknown:
+        print(f"Unknown arguments: {unknown}. Use --test, --decompress, --help, or run with no arguments for demo.")
+        return 1
+
+    # Bare invocation (no args): generate output txt files in the same (decompressor_sw) directory
     print("No arguments supplied - running demo to generate txt outputs in this directory...")
     try:
         # Locate the test compression result from the compressor_sw sibling

@@ -32,6 +32,13 @@
         "type": "string",
         "description": "Repository name"
       },
+      "reviewers": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "GitHub usernames or ORG/team-slug team reviewers to request reviews from"
+      },
       "title": {
         "type": "string",
         "description": "PR title"

@@ -22,7 +22,8 @@
       },
       "private": {
         "type": "boolean",
-        "description": "Whether repo should be private"
+        "description": "Whether the repository should be private. Defaults to true (private) when omitted.",
+        "default": true
       }
     },
     "required": [
