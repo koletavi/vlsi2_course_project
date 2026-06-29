@@ -1,0 +1,34 @@
+================================================================================
+TIMING COMPARISON — SYNTHESIS vs SOFTWARE
+================================================================================
+Generated:   2026-06-28 00:41:49 UTC
+Board:       Pynq-Z2 (xc7z020clg400-1)
+Target:      100.0 MHz
+Execution:   61.297 MHz (at 100 MHz target when timing met)
+Max Fmax:    61.297 MHz
+WNS:         -6.314 ns
+Timing met:  NO — results use achievable Fmax
+HW latency:  3 cycles
+HW per pkt:  4.894200e-08 s
+HW 9 pkts: 4.404780e-07 s
+
+--------------------------------------------------------------------------------
+Test                         SW (s)   HW synth (s)      Speedup
+--------------------------------------------------------------------------------
+all_ones               1.057608e-04   4.894200e-08      2160.9x
+all_zeros              1.088288e-04   4.894200e-08      2223.6x
+back_to_back_1         1.620794e-04   4.894200e-08      3311.7x
+back_to_back_2         1.874893e-04   4.894200e-08      3830.8x
+ramp                   1.532858e-04   4.894200e-08      3132.0x
+random                 2.103095e-04   4.894200e-08      4297.1x
+sine_like              1.463909e-04   4.894200e-08      2991.1x
+single_plane           1.035379e-04   4.894200e-08      2115.5x
+sparse                 1.553725e-04   4.894200e-08      3174.6x
+--------------------------------------------------------------------------------
+TOTAL (all tests)      1.333055e-03   4.404780e-07      3026.4x
+
+Notes:
+  SW time = wall-clock mean per packet (compressor_sw pipeline).
+  HW time = pipeline latency (3 cycles) at achieved post-route/synth Fmax.
+  Speedup = SW / HW (values >1 mean hardware is faster).
+================================================================================

@@ -1,0 +1,34 @@
+================================================================================
+TIMING COMPARISON — IMPLEMENTATION vs SOFTWARE
+================================================================================
+Generated:   2026-06-28 01:04:10 UTC
+Board:       Pynq-Z2 (xc7z020clg400-1)
+Target:      100.0 MHz
+Execution:   100.000 MHz (at 100 MHz target when timing met)
+Max Fmax:    893.655 MHz
+WNS:         8.881 ns
+Timing met:  yes
+HW latency:  3 cycles
+HW per pkt:  3.000000e-08 s
+HW 9 pkts: 2.700000e-07 s
+
+--------------------------------------------------------------------------------
+Test                         SW (s)   HW imple (s)      Speedup
+--------------------------------------------------------------------------------
+all_ones               9.578538e-05   3.000000e-08      3192.8x
+all_zeros              9.752632e-05   3.000000e-08      3250.9x
+back_to_back_1         1.047241e-04   3.000000e-08      3490.8x
+back_to_back_2         1.208791e-04   3.000000e-08      4029.3x
+ramp                   1.067989e-04   3.000000e-08      3560.0x
+random                 2.074277e-04   3.000000e-08      6914.3x
+sine_like              1.541117e-04   3.000000e-08      5137.1x
+single_plane           9.477079e-05   3.000000e-08      3159.0x
+sparse                 1.180166e-04   3.000000e-08      3933.9x
+--------------------------------------------------------------------------------
+TOTAL (all tests)      1.100041e-03   2.700000e-07      4074.2x
+
+Notes:
+  SW time = wall-clock mean per packet (decompressor reference pipeline).
+  HW time = pipeline latency (3 cycles) at achieved post-route/synth Fmax.
+  Speedup = SW / HW (values >1 mean hardware is faster).
+================================================================================

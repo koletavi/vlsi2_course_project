@@ -1,0 +1,435 @@
+
+*** Running vivado
+    with args -log decompressor_timing_top.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source decompressor_timing_top.tcl
+
+
+
+****** Vivado v2024.1.2 (64-bit)
+  **** SW Build 5164865 on Thu Sep  5 14:37:11 MDT 2024
+  **** IP Build 5164407 on Fri Sep  6 08:18:11 MDT 2024
+  **** SharedData Build 5164864 on Thu Sep 05 13:09:09 MDT 2024
+  **** Start of session at: Sun Jun 28 03:53:14 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2024 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source decompressor_timing_top.tcl -notrace
+create_project: Time (s): cpu = 00:00:09 ; elapsed = 00:00:09 . Memory (MB): peak = 564.711 ; gain = 119.801
+Command: synth_design -top decompressor_timing_top -part xc7z020clg400-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7z020'
+INFO: [Device 21-403] Loading part xc7z020clg400-1
+INFO: [Device 21-9227] Part: xc7z020clg400-1 does not have CEAM library.
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 51088
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:04 ; elapsed = 00:00:06 . Memory (MB): peak = 1444.758 ; gain = 447.238
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-10636] default field of an assignment pattern cannot contain another assignment pattern [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:55]
+INFO: [Synth 8-6157] synthesizing module 'decompressor_timing_top' [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:8]
+INFO: [Synth 8-6157] synthesizing module 'decompressor' [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/decompressor.sv:32]
+	Parameter WORD_SIZE bound to: 32 - type: integer 
+	Parameter PACKET_SIZE bound to: 64 - type: integer 
+	Parameter GROUP_SIZE bound to: 8 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'urze' [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:18]
+	Parameter WORD_SIZE bound to: 32 - type: integer 
+	Parameter PACKET_SIZE bound to: 64 - type: integer 
+	Parameter GROUP_SIZE bound to: 8 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'unpack_group' [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/unpack_group.sv:19]
+	Parameter PACKET_SIZE bound to: 64 - type: integer 
+	Parameter GROUP_SIZE bound to: 8 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'unpack_group' (0#1) [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/unpack_group.sv:19]
+WARNING: [Synth 8-324] index 8 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 9 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 10 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 11 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 12 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 13 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 14 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 8 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 9 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 10 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 11 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 12 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 13 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 14 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 8 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 9 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 10 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 11 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 12 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 13 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 14 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 8 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 9 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 10 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 11 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 12 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 13 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+WARNING: [Synth 8-324] index 14 out of range [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:58]
+INFO: [Synth 8-6155] done synthesizing module 'urze' (0#1) [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/urze.sv:18]
+INFO: [Synth 8-6157] synthesizing module 'bit_transpose' [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/bit_transpose.sv:20]
+	Parameter WORD_SIZE bound to: 32 - type: integer 
+	Parameter PACKET_SIZE bound to: 64 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'bit_transpose' (0#1) [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/bit_transpose.sv:20]
+INFO: [Synth 8-6157] synthesizing module 'undiffnb' [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/undiffnb.sv:17]
+	Parameter WORD_SIZE bound to: 32 - type: integer 
+	Parameter PACKET_SIZE bound to: 64 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'undiffnb' (0#1) [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/undiffnb.sv:17]
+INFO: [Synth 8-6155] done synthesizing module 'decompressor' (0#1) [C:/Users/kolet/projects/vlsi2/decompressor_hw/rtl/decompressor.sv:32]
+INFO: [Synth 8-6155] done synthesizing module 'decompressor_timing_top' (0#1) [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:8]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[63] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[62] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[61] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[60] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[59] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[58] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[57] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[56] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[55] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[54] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[53] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[52] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[51] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[50] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[49] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[48] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[47] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[46] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[45] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[44] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[43] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[42] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[41] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[40] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[39] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[38] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[37] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[36] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[35] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[34] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[33] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[32] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[31] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[30] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[29] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[28] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[27] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[26] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[25] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[24] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[23] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[22] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[21] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[20] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[19] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[18] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[17] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[16] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[15] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[14] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[13] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[12] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[11] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[10] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[9] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[8] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[7] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[6] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[5] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[4] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[3] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[2] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[1] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-6014] Unused sequential element data_packet_sink_reg[0] was removed.  [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/src/decompressor_timing_top.sv:39]
+WARNING: [Synth 8-7129] Port in_count[6] in module urze is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_count[5] in module urze is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_count[4] in module urze is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_count[3] in module urze is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_count[2] in module urze is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_count[1] in module urze is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_count[0] in module urze is either unconnected or has no load
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:05 ; elapsed = 00:00:08 . Memory (MB): peak = 1584.055 ; gain = 586.535
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:05 ; elapsed = 00:00:08 . Memory (MB): peak = 1584.055 ; gain = 586.535
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:05 ; elapsed = 00:00:08 . Memory (MB): peak = 1584.055 ; gain = 586.535
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.169 . Memory (MB): peak = 1584.055 ; gain = 0.000
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/constraints/decompressor.xdc]
+Finished Parsing XDC File [C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/constraints/decompressor.xdc]
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.002 . Memory (MB): peak = 1687.422 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.147 . Memory (MB): peak = 1687.422 ; gain = 0.000
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:13 ; elapsed = 00:00:18 . Memory (MB): peak = 1687.422 ; gain = 689.902
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7z020clg400-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:13 ; elapsed = 00:00:18 . Memory (MB): peak = 1687.422 ; gain = 689.902
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property KEEP_HIERARCHY = TRUE for u_decompressor. (constraint file  C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/constraints/decompressor.xdc, line 9).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:13 ; elapsed = 00:00:18 . Memory (MB): peak = 1687.422 ; gain = 689.902
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:14 ; elapsed = 00:00:19 . Memory (MB): peak = 1687.422 ; gain = 689.902
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input   32 Bit       Adders := 1     
+	   3 Input   32 Bit       Adders := 1     
+	  64 Input   32 Bit       Adders := 1     
+	  63 Input   32 Bit       Adders := 1     
+	  65 Input   32 Bit       Adders := 1     
+	  62 Input   32 Bit       Adders := 1     
+	  61 Input   32 Bit       Adders := 1     
+	  60 Input   32 Bit       Adders := 1     
+	  59 Input   32 Bit       Adders := 1     
+	  57 Input   32 Bit       Adders := 1     
+	  56 Input   32 Bit       Adders := 1     
+	  58 Input   32 Bit       Adders := 1     
+	  55 Input   32 Bit       Adders := 1     
+	  49 Input   32 Bit       Adders := 1     
+	  48 Input   32 Bit       Adders := 1     
+	  47 Input   32 Bit       Adders := 1     
+	  52 Input   32 Bit       Adders := 1     
+	  51 Input   32 Bit       Adders := 1     
+	  50 Input   32 Bit       Adders := 1     
+	  53 Input   32 Bit       Adders := 1     
+	  54 Input   32 Bit       Adders := 1     
+	  46 Input   32 Bit       Adders := 1     
+	  45 Input   32 Bit       Adders := 1     
+	  44 Input   32 Bit       Adders := 1     
+	  43 Input   32 Bit       Adders := 1     
+	  41 Input   32 Bit       Adders := 1     
+	  42 Input   32 Bit       Adders := 1     
+	  40 Input   32 Bit       Adders := 1     
+	  39 Input   32 Bit       Adders := 1     
+	  36 Input   32 Bit       Adders := 1     
+	  38 Input   32 Bit       Adders := 1     
+	  34 Input   32 Bit       Adders := 1     
+	  37 Input   32 Bit       Adders := 1     
+	   7 Input   32 Bit       Adders := 1     
+	   8 Input   32 Bit       Adders := 1     
+	  33 Input   32 Bit       Adders := 1     
+	  32 Input   32 Bit       Adders := 1     
+	   9 Input   32 Bit       Adders := 1     
+	   4 Input   32 Bit       Adders := 1     
+	  31 Input   32 Bit       Adders := 1     
+	   5 Input   32 Bit       Adders := 1     
+	  10 Input   32 Bit       Adders := 1     
+	  22 Input   32 Bit       Adders := 1     
+	   6 Input   32 Bit       Adders := 1     
+	  35 Input   32 Bit       Adders := 1     
+	  27 Input   32 Bit       Adders := 1     
+	  26 Input   32 Bit       Adders := 1     
+	  25 Input   32 Bit       Adders := 1     
+	  24 Input   32 Bit       Adders := 1     
+	  23 Input   32 Bit       Adders := 1     
+	  18 Input   32 Bit       Adders := 1     
+	  19 Input   32 Bit       Adders := 1     
+	  17 Input   32 Bit       Adders := 1     
+	  20 Input   32 Bit       Adders := 1     
+	  16 Input   32 Bit       Adders := 1     
+	  21 Input   32 Bit       Adders := 1     
+	  15 Input   32 Bit       Adders := 1     
+	  14 Input   32 Bit       Adders := 1     
+	  28 Input   32 Bit       Adders := 1     
+	  13 Input   32 Bit       Adders := 1     
+	  12 Input   32 Bit       Adders := 1     
+	  29 Input   32 Bit       Adders := 1     
+	  11 Input   32 Bit       Adders := 1     
+	  30 Input   32 Bit       Adders := 1     
+	   2 Input    5 Bit       Adders := 21    
+	   8 Input    4 Bit       Adders := 4     
+	   5 Input    3 Bit       Adders := 4     
+	   4 Input    3 Bit       Adders := 4     
+	   3 Input    3 Bit       Adders := 4     
+	   2 Input    3 Bit       Adders := 4     
+	   2 Input    2 Bit       Adders := 4     
+	   3 Input    2 Bit       Adders := 4     
++---XORs : 
+	   2 Input     32 Bit         XORs := 64    
++---Registers : 
+	               64 Bit    Registers := 64    
+	               32 Bit    Registers := 129   
+	                7 Bit    Registers := 1     
+	                1 Bit    Registers := 3     
++---Muxes : 
+	   2 Input   64 Bit        Muxes := 180   
+	   4 Input   64 Bit        Muxes := 4     
+	   3 Input   64 Bit        Muxes := 4     
+	   2 Input    5 Bit        Muxes := 16    
+	   2 Input    4 Bit        Muxes := 3     
+	   5 Input    4 Bit        Muxes := 1     
+	   2 Input    2 Bit        Muxes := 4     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 220 (col length:60)
+BRAMs: 280 (col length: RAMB18 60 RAMB36 30)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+WARNING: [Synth 8-7129] Port in_count[6] in module decompressor is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_count[5] in module decompressor is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_count[4] in module decompressor is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_count[3] in module decompressor is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_count[2] in module decompressor is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_count[1] in module decompressor is either unconnected or has no load
+WARNING: [Synth 8-7129] Port in_count[0] in module decompressor is either unconnected or has no load
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:01:53 ; elapsed = 00:02:57 . Memory (MB): peak = 1687.422 ; gain = 689.902
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:01:59 ; elapsed = 00:03:06 . Memory (MB): peak = 1704.379 ; gain = 706.859
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:04:37 ; elapsed = 00:05:51 . Memory (MB): peak = 2000.934 ; gain = 1003.414
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:05:46 ; elapsed = 00:07:22 . Memory (MB): peak = 2010.676 ; gain = 1013.156
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:05:55 ; elapsed = 00:07:31 . Memory (MB): peak = 2010.676 ; gain = 1013.156
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:05:55 ; elapsed = 00:07:31 . Memory (MB): peak = 2010.676 ; gain = 1013.156
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:06:03 ; elapsed = 00:07:39 . Memory (MB): peak = 2010.676 ; gain = 1013.156
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:06:03 ; elapsed = 00:07:39 . Memory (MB): peak = 2010.676 ; gain = 1013.156
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:06:04 ; elapsed = 00:07:41 . Memory (MB): peak = 2010.676 ; gain = 1013.156
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:06:04 ; elapsed = 00:07:41 . Memory (MB): peak = 2010.676 ; gain = 1013.156
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+-------+------+
+|      |Cell   |Count |
++------+-------+------+
+|1     |BUFG   |     1|
+|2     |CARRY4 |  7952|
+|3     |LUT1   |    33|
+|4     |LUT2   |   986|
+|5     |LUT3   | 26512|
+|6     |LUT4   | 19348|
+|7     |LUT5   |  2215|
+|8     |LUT6   | 23152|
+|9     |MUXF7  |   640|
+|10    |MUXF8  |   128|
+|11    |FDCE   |  6147|
+|12    |IBUF   |     3|
+|13    |OBUF   |    40|
++------+-------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:06:04 ; elapsed = 00:07:41 . Memory (MB): peak = 2010.676 ; gain = 1013.156
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 7 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:05:56 ; elapsed = 00:07:38 . Memory (MB): peak = 2010.676 ; gain = 909.789
+Synthesis Optimization Complete : Time (s): cpu = 00:06:05 ; elapsed = 00:07:42 . Memory (MB): peak = 2010.676 ; gain = 1013.156
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.721 . Memory (MB): peak = 2010.676 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 8720 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.012 . Memory (MB): peak = 2010.676 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete | Checksum: 7423ecbe
+INFO: [Common 17-83] Releasing license: Synthesis
+27 Infos, 107 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:06:20 ; elapsed = 00:08:15 . Memory (MB): peak = 2010.676 ; gain = 1445.965
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.219 . Memory (MB): peak = 2010.676 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/build/synth/decompressor_timing_synth.runs/synth_1/decompressor_timing_top.dcp' has been generated.
+write_checkpoint: Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 2010.676 ; gain = 0.000
+INFO: [Vivado 12-24828] Executing command : report_utilization -file decompressor_timing_top_utilization_synth.rpt -pb decompressor_timing_top_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Sun Jun 28 04:01:47 2026...

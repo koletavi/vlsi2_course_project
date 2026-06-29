@@ -1,0 +1,316 @@
+#-----------------------------------------------------------
+# Vivado v2024.1.2 (64-bit)
+# SW Build 5164865 on Thu Sep  5 14:37:11 MDT 2024
+# IP Build 5164407 on Fri Sep  6 08:18:11 MDT 2024
+# SharedData Build 5164864 on Thu Sep 05 13:09:09 MDT 2024
+# Start of session at: Wed Jun 24 19:16:26 2026
+# Process ID: 88760
+# Current directory: C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/build/synth/compressor_timing_synth.runs/synth_1
+# Command line: vivado.exe -log compressor_timing_top.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source compressor_timing_top.tcl
+# Log file: C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/build/synth/compressor_timing_synth.runs/synth_1/compressor_timing_top.vds
+# Journal file: C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/build/synth/compressor_timing_synth.runs/synth_1\vivado.jou
+# Running On        :Avishai-Lenovo
+# Platform          :Windows Server 2016 or Windows 10
+# Operating System  :26200
+# Processor Detail  :Intel(R) Core(TM) i9-14900HX
+# CPU Frequency     :2419 MHz
+# CPU Physical cores:24
+# CPU Logical cores :32
+# Host memory       :34070 MB
+# Swap memory       :48839 MB
+# Total Virtual     :82910 MB
+# Available Virtual :8628 MB
+#-----------------------------------------------------------
+source compressor_timing_top.tcl -notrace
+create_project: Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 564.777 ; gain = 118.195
+Command: synth_design -top compressor_timing_top -part xc7z020clg400-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7z020'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7z020'
+INFO: [Device 21-403] Loading part xc7z020clg400-1
+INFO: [Device 21-9227] Part: xc7z020clg400-1 does not have CEAM library.
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 154112
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:04 . Memory (MB): peak = 1444.465 ; gain = 448.484
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'compressor_timing_top' [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:8]
+INFO: [Synth 8-6157] synthesizing module 'compressor' [C:/Users/kolet/projects/vlsi2/compressor_hw/rtl/compressor.sv:29]
+	Parameter WORD_SIZE bound to: 32 - type: integer 
+	Parameter PACKET_SIZE bound to: 64 - type: integer 
+	Parameter GROUP_SIZE bound to: 8 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'diffnb' [C:/Users/kolet/projects/vlsi2/compressor_hw/rtl/diffnb.sv:19]
+	Parameter WORD_SIZE bound to: 32 - type: integer 
+	Parameter PACKET_SIZE bound to: 64 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'diffnb' (0#1) [C:/Users/kolet/projects/vlsi2/compressor_hw/rtl/diffnb.sv:19]
+INFO: [Synth 8-6157] synthesizing module 'bit_transpose' [C:/Users/kolet/projects/vlsi2/compressor_hw/rtl/bit_transpose.sv:21]
+	Parameter WORD_SIZE bound to: 32 - type: integer 
+	Parameter PACKET_SIZE bound to: 64 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'bit_transpose' (0#1) [C:/Users/kolet/projects/vlsi2/compressor_hw/rtl/bit_transpose.sv:21]
+INFO: [Synth 8-6157] synthesizing module 'rze' [C:/Users/kolet/projects/vlsi2/compressor_hw/rtl/rze.sv:23]
+	Parameter WORD_SIZE bound to: 32 - type: integer 
+	Parameter PACKET_SIZE bound to: 64 - type: integer 
+	Parameter GROUP_SIZE bound to: 8 - type: integer 
+INFO: [Synth 8-6157] synthesizing module 'pack_group' [C:/Users/kolet/projects/vlsi2/compressor_hw/rtl/pack_group.sv:18]
+	Parameter PACKET_SIZE bound to: 64 - type: integer 
+	Parameter GROUP_SIZE bound to: 8 - type: integer 
+INFO: [Synth 8-6155] done synthesizing module 'pack_group' (0#1) [C:/Users/kolet/projects/vlsi2/compressor_hw/rtl/pack_group.sv:18]
+INFO: [Synth 8-6155] done synthesizing module 'rze' (0#1) [C:/Users/kolet/projects/vlsi2/compressor_hw/rtl/rze.sv:23]
+INFO: [Synth 8-6155] done synthesizing module 'compressor' (0#1) [C:/Users/kolet/projects/vlsi2/compressor_hw/rtl/compressor.sv:29]
+INFO: [Synth 8-6155] done synthesizing module 'compressor_timing_top' (0#1) [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:8]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[31] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[30] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[29] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[28] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[27] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[26] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[25] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[24] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[23] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[22] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[21] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[20] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[19] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[18] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[17] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[16] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[15] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[14] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[13] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[12] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[11] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[10] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[9] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[8] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[7] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[6] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[5] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[4] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[3] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[2] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[1] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+WARNING: [Synth 8-6014] Unused sequential element packed_planes_sink_reg[0] was removed.  [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/src/compressor_timing_top.sv:37]
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:05 ; elapsed = 00:00:07 . Memory (MB): peak = 1635.418 ; gain = 639.438
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 1635.418 ; gain = 639.438
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 1635.418 ; gain = 639.438
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.263 . Memory (MB): peak = 1635.418 ; gain = 0.000
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/constraints/compressor.xdc]
+Finished Parsing XDC File [C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/constraints/compressor.xdc]
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.002 . Memory (MB): peak = 1747.102 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.192 . Memory (MB): peak = 1747.102 ; gain = 0.000
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:15 ; elapsed = 00:00:17 . Memory (MB): peak = 1747.102 ; gain = 751.121
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7z020clg400-1
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:15 ; elapsed = 00:00:17 . Memory (MB): peak = 1747.102 ; gain = 751.121
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property KEEP_HIERARCHY = TRUE for u_compressor. (constraint file  C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/constraints/compressor.xdc, line 9).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:15 ; elapsed = 00:00:17 . Memory (MB): peak = 1747.102 ; gain = 751.121
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:21 ; elapsed = 00:00:25 . Memory (MB): peak = 1747.102 ; gain = 751.121
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   3 Input   32 Bit       Adders := 63    
+	   2 Input   32 Bit       Adders := 1     
+	   2 Input    6 Bit       Adders := 1     
+	   3 Input    5 Bit       Adders := 2     
+	   4 Input    5 Bit       Adders := 2     
+	   2 Input    5 Bit       Adders := 3     
+	   5 Input    5 Bit       Adders := 2     
+	   6 Input    5 Bit       Adders := 2     
+	   7 Input    5 Bit       Adders := 2     
+	   8 Input    5 Bit       Adders := 2     
+	   9 Input    5 Bit       Adders := 1     
+	   2 Input    4 Bit       Adders := 5     
+	   3 Input    4 Bit       Adders := 1     
+	   8 Input    4 Bit       Adders := 1     
+	   4 Input    4 Bit       Adders := 1     
+	   5 Input    4 Bit       Adders := 1     
+	   6 Input    4 Bit       Adders := 1     
+	   9 Input    4 Bit       Adders := 1     
+	   7 Input    4 Bit       Adders := 1     
+	   5 Input    3 Bit       Adders := 5     
+	   4 Input    3 Bit       Adders := 5     
+	   3 Input    3 Bit       Adders := 5     
+	   2 Input    3 Bit       Adders := 5     
+	   2 Input    2 Bit       Adders := 5     
+	   3 Input    2 Bit       Adders := 5     
++---XORs : 
+	   2 Input     32 Bit         XORs := 64    
++---Registers : 
+	               64 Bit    Registers := 64    
+	               32 Bit    Registers := 129   
+	                7 Bit    Registers := 1     
+	                1 Bit    Registers := 3     
++---Muxes : 
+	   2 Input   64 Bit        Muxes := 753   
+	   2 Input    2 Bit        Muxes := 13    
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 220 (col length:60)
+BRAMs: 280 (col length: RAMB18 60 RAMB36 30)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:01:03 ; elapsed = 00:01:40 . Memory (MB): peak = 1747.102 ; gain = 751.121
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:01:08 ; elapsed = 00:01:47 . Memory (MB): peak = 1747.102 ; gain = 751.121
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+info: optimization accepted worst group hill climbing move (-6811.0/oG. 155.0ps)
+info: optimization accepted worst group hill climbing move (-6211.0/oG. 481.0ps)
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:06:09 ; elapsed = 00:07:31 . Memory (MB): peak = 2882.648 ; gain = 1886.668
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:06:22 ; elapsed = 00:07:57 . Memory (MB): peak = 2882.648 ; gain = 1886.668
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:06:27 ; elapsed = 00:08:03 . Memory (MB): peak = 2882.648 ; gain = 1886.668
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:06:27 ; elapsed = 00:08:03 . Memory (MB): peak = 2882.648 ; gain = 1886.668
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:06:29 ; elapsed = 00:08:05 . Memory (MB): peak = 2882.648 ; gain = 1886.668
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:06:29 ; elapsed = 00:08:05 . Memory (MB): peak = 2882.648 ; gain = 1886.668
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:06:30 ; elapsed = 00:08:06 . Memory (MB): peak = 2882.648 ; gain = 1886.668
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:06:30 ; elapsed = 00:08:06 . Memory (MB): peak = 2882.648 ; gain = 1886.668
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+-------+------+
+|      |Cell   |Count |
++------+-------+------+
+|1     |BUFG   |     1|
+|2     |CARRY4 |   512|
+|3     |LUT1   |  1041|
+|4     |LUT2   |  5570|
+|5     |LUT3   |  2697|
+|6     |LUT4   |  3750|
+|7     |LUT5   |  4712|
+|8     |LUT6   | 11884|
+|9     |FDCE   |  6185|
+|10    |IBUF   |     3|
+|11    |OBUF   |    40|
++------+-------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:06:30 ; elapsed = 00:08:06 . Memory (MB): peak = 2882.648 ; gain = 1886.668
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 0 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:06:19 ; elapsed = 00:08:02 . Memory (MB): peak = 2882.648 ; gain = 1774.984
+Synthesis Optimization Complete : Time (s): cpu = 00:06:30 ; elapsed = 00:08:07 . Memory (MB): peak = 2882.648 ; gain = 1886.668
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.294 . Memory (MB): peak = 2882.648 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 512 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.005 . Memory (MB): peak = 2882.648 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete | Checksum: 1e39c1cd
+INFO: [Common 17-83] Releasing license: Synthesis
+27 Infos, 32 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:06:38 ; elapsed = 00:08:17 . Memory (MB): peak = 2882.648 ; gain = 2317.871
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.031 . Memory (MB): peak = 2882.648 ; gain = 0.000
+INFO: [Common 17-1381] The checkpoint 'C:/Users/kolet/projects/vlsi2/compressor_hw/tb/timing_compare/build/synth/compressor_timing_synth.runs/synth_1/compressor_timing_top.dcp' has been generated.
+INFO: [Vivado 12-24828] Executing command : report_utilization -file compressor_timing_top_utilization_synth.rpt -pb compressor_timing_top_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Wed Jun 24 19:24:58 2026...

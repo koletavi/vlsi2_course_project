@@ -1,0 +1,16 @@
+================================================================================
+HARDWARE TIMING — IMPLEMENTATION
+================================================================================
+Board:              Pynq-Z2 (xc7z020clg400-1)
+Generated:          2026-06-28 01:04:09 UTC
+Target MHz:         100.0
+Max achievable MHz: 893.655
+Execution MHz:      100.000
+WNS ns:             8.881
+TNS ns:             0.000
+Timing met:         yes
+Latency cycles:     3
+Seconds per packet: 3.000000e-08
+Seconds for 9 packets: 2.700000e-07
+NUM_TESTS:          9
+================================================================================

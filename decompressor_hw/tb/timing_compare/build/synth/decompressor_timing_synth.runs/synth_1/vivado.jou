@@ -1,0 +1,24 @@
+#-----------------------------------------------------------
+# Vivado v2024.1.2 (64-bit)
+# SW Build 5164865 on Thu Sep  5 14:37:11 MDT 2024
+# IP Build 5164407 on Fri Sep  6 08:18:11 MDT 2024
+# SharedData Build 5164864 on Thu Sep 05 13:09:09 MDT 2024
+# Start of session at: Sun Jun 28 03:53:14 2026
+# Process ID: 109272
+# Current directory: C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/build/synth/decompressor_timing_synth.runs/synth_1
+# Command line: vivado.exe -log decompressor_timing_top.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source decompressor_timing_top.tcl
+# Log file: C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/build/synth/decompressor_timing_synth.runs/synth_1/decompressor_timing_top.vds
+# Journal file: C:/Users/kolet/projects/vlsi2/decompressor_hw/tb/timing_compare/build/synth/decompressor_timing_synth.runs/synth_1\vivado.jou
+# Running On        :Avishai-Lenovo
+# Platform          :Windows Server 2016 or Windows 10
+# Operating System  :26200
+# Processor Detail  :Intel(R) Core(TM) i9-14900HX
+# CPU Frequency     :2419 MHz
+# CPU Physical cores:24
+# CPU Logical cores :32
+# Host memory       :34070 MB
+# Swap memory       :48839 MB
+# Total Virtual     :82910 MB
+# Available Virtual :12516 MB
+#-----------------------------------------------------------
+source decompressor_timing_top.tcl -notrace

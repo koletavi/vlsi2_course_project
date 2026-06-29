@@ -1,0 +1,11 @@
+PASS all_ones
+PASS all_zeros
+PASS back_to_back_1
+PASS back_to_back_2
+PASS ramp
+PASS random
+PASS sine_like
+PASS single_plane
+PASS sparse
+
+9 passed, 0 failed
